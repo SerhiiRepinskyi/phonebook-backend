@@ -22,4 +22,16 @@ const addContact = async (req, res) => {
   res.status(201).json(result);
 };
 
-module.exports = { getContacts, deleteContact, addContact };
+const updateById = async (req, res) => {
+  const { contactId } = req.params;
+  const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+    new: true,
+  });
+  if (!result) {
+    res.status(404);
+    return;
+  }
+  res.json(result);
+};
+
+module.exports = { getContacts, deleteContact, addContact, updateById };

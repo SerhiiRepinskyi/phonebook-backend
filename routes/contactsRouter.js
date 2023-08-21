@@ -18,6 +18,11 @@ contactsRouter.post("/", validateBody(contactSchema), contactsCtrl.addContact);
 
 contactsRouter.delete("/:contactId", isValidId, contactsCtrl.deleteContact);
 
-// router.put("/:contactId", isValidId, putContact);
+contactsRouter.put(
+  "/:contactId",
+  isValidId,
+  validateBody(contactSchema),
+  contactsCtrl.updateById
+);
 
 module.exports = contactsRouter;
