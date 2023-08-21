@@ -1,24 +1,26 @@
-const User = require("../db/models/userModel");
 const jwt = require("jsonwebtoken");
-const { SECRET_KEY } = process.env;
+
+const User = require("../db/models/userModel");
+
+const { JWT_SECRET } = process.env;
 
 const signup = async (req, res) => {
   const { name, email, password } = req.body;
 
   const user = await User.findOne({ email });
   if (user) {
-    res.status(409).json({ message: "Email is used" });
+    res.status(409).json({ message: "Email in use" });
     return;
   }
   const newUser = new User({ name, email, password });
-  await newUser.hashPasvord(password);
+  await newUser.hashPassword(password);
   await newUser.save();
 
   const payload = {
     id: newUser._id,
   };
 
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "60m" });
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
 
   await User.findByIdAndUpdate(newUser._id, { token });
 
@@ -53,7 +55,7 @@ const login = async (req, res) => {
     id: user._id,
   };
 
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "60m" });
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
 
   await User.findByIdAndUpdate(user._id, { token });
 
@@ -76,7 +78,5 @@ const getCurrent = (req, res) => {
   const { email, name } = req.user;
   res.json({ email, name });
 };
-
-// console.log(SECRET_KEY);
 
 module.exports = { signup, login, logout, getCurrent };

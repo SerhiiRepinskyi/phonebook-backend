@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+
 const bcrypt = require("bcrypt");
 
 const userSchema = new Schema(
@@ -17,10 +18,10 @@ const userSchema = new Schema(
       default: "",
     },
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
 
-userSchema.methods.hashPasvord = async function (password) {
+userSchema.methods.hashPassword = async function (password) {
   this.password = await bcrypt.hash(password, 10);
 };
 
